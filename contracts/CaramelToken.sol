@@ -1,5 +1,5 @@
 // Sources flattened with hardhat v2.1.1 https://hardhat.org
-// @dev Telegram: @defi_guru
+
 // File @openzeppelin/contracts/utils/Context.sol@v3.4.1
 
 // SPDX-License-Identifier: MIT
