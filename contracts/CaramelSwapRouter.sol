@@ -1,4 +1,3 @@
-// @dev Telegram: @defi_guru
 pragma solidity =0.6.6;
 
 import './interfaces/IUniswapV2Factory.sol';
