@@ -24,17 +24,11 @@ abstract contract Context {
 pragma solidity ^0.6.0;
 
 /**
- * @dev Contract module which provides a basic access control mechanism, where
- * there is an account (an owner) that can be granted exclusive access to
- * specific functions.
- *
- * By default, the owner account will be the one that deploys the contract. This
- * can later be changed with {transferOwnership}.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
+ * CaramelSwap is a Fair Launch/no ICO , Decentralized AMM on Binance Smart chain. Mel is the 3° Generation yield farming on BSC.
+*With our user friendly platform, the new feature MEL required allows inverstitors to earn great profits with extreme sustainability
+*in a fair way for everyone, requiring all minners to have MEL in their wallets, so they can enjoy all the benefits of our DEX.
  */
+ 
 abstract contract Ownable is Context {
     address private _owner;
 
