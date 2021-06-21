@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // @dev Telegram: defi_guru
 
-pragma solidity >=0.6.6;
 
 /*
  * @dev Provides information about the current execution context, including the
