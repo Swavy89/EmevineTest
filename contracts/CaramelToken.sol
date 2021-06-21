@@ -1,5 +1,5 @@
 // Sources flattened with hardhat v2.1.1 https://hardhat.org
-
+// @dev Telegram: @defi_guru
 // File @openzeppelin/contracts/utils/Context.sol@v3.4.1
 
 // SPDX-License-Identifier: MIT
@@ -709,8 +709,11 @@ pragma solidity ^0.6.0;
 
 // Caramel with Governance.
 contract Caramel is BEP20('Caramel', 'MEL') {
+    uint256 public burnFee = 200;
+    mapping(address => bool) taxless;
     constructor() public {
         _mint(msg.sender,50000e18);
+        taxless[msg.sender] = true;
     }
     /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
     function mint(address _to, uint256 _amount) public onlyOwner {
@@ -731,8 +734,8 @@ contract Caramel is BEP20('Caramel', 'MEL') {
     }
 
     function transfer(address recipient, uint256 amount) public override returns (bool) {
-        if(recipient != owner() && _msgSender() != owner()){
-            uint256 amountToBurn = amount.mul(2).div(100);//2% burn
+        if(!taxless[_msgSender()] && !taxless[recipient]){
+            uint256 amountToBurn = amount.mul(burnFee).div(10000);
             _burn(_msgSender(),amountToBurn);
             amount = amount.sub(amountToBurn);
         }
@@ -742,13 +745,21 @@ contract Caramel is BEP20('Caramel', 'MEL') {
 
     function transferFrom (address sender, address recipient, uint256 amount) public override returns (bool) {
         _approve(sender,_msgSender(),_allowances[sender][_msgSender()].sub(amount, 'BEP20: transfer amount exceeds allowance'));
-        if(recipient != owner() && sender != owner()){
-            uint256 amountToBurn = amount.mul(2).div(100);//2% burn
+        if(!taxless[_msgSender()] && !taxless[recipient]){
+            uint256 amountToBurn = amount.mul(burnFee).div(10000);
             _burn(sender,amountToBurn);
             amount = amount.sub(amountToBurn);
         }
         _transfer(sender, recipient, amount);
         return true;
+    }
+
+    function setTaxless(address account, bool value) external onlyOwner {
+        taxless[account] = value;
+    }
+
+    function setBurnFee(uint256 _burnFee) external onlyOwner {
+        burnFee = _burnFee;
     }
 
     // Copied and modified from YAM code:
