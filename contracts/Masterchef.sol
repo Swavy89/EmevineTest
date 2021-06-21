@@ -1,4 +1,3 @@
-// @dev Telegram: @defi_guru
 // File @openzeppelin/contracts/math/SafeMath.sol@v3.4.1
 
 // SPDX-License-Identifier: MIT
