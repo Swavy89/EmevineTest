@@ -107,13 +107,11 @@ contract MasterChef is Ownable {
         return poolInfo.length;
     }
 
-    function add(uint256 _allocPoint, IBEP20 _token, uint16 _depositFeeBP, uint256 _minDeposit, uint256 _harvestInterval, bool _withUpdate) public onlyOwner {
+    function add(uint256 _allocPoint, IBEP20 _token, uint16 _depositFeeBP, uint256 _minDeposit, uint256 _harvestInterval) public onlyOwner {
         require(!exists[address(_token)], "Already Exists!");
         require(_depositFeeBP <= 10000, "add: invalid deposit fee basis points");
         require(_harvestInterval <= MAXIMUM_HARVEST_INTERVAL, "add: invalid harvest interval");
-        if (_withUpdate) {
-            massUpdatePools();
-        }
+        
         uint256 lastRewardBlock = block.number > startBlock ? block.number : startBlock;
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
         poolInfo.push(PoolInfo({
@@ -128,12 +126,10 @@ contract MasterChef is Ownable {
         exists[address(_token)] = true;
     }
 
-    function set(uint256 _pid, uint256 _allocPoint, uint16 _depositFeeBP, uint256 _minDeposit, uint256 _harvestInterval, bool _withUpdate) public onlyOwner {
+    function set(uint256 _pid, uint256 _allocPoint, uint16 _depositFeeBP, uint256 _minDeposit, uint256 _harvestInterval) public onlyOwner {
         require(_depositFeeBP <= 10000, "set: invalid deposit fee basis points");
         require(_harvestInterval <= MAXIMUM_HARVEST_INTERVAL, "add: invalid harvest interval");
-        if (_withUpdate) {
-            massUpdatePools();
-        }
+        
         totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(_allocPoint);
         poolInfo[_pid].allocPoint = _allocPoint;
         poolInfo[_pid].depositFeeBP = _depositFeeBP;
@@ -164,10 +160,13 @@ contract MasterChef is Ownable {
         return block.timestamp >= user.nextHarvestUntil;
     }
 
-    function massUpdatePools(int from, int to) public {
-        uint256 length = poolInfo.length;
-        for (uint256 pid = from; pid =< to; ++pid) {
-            updatePool(pid);
+    // if pool length becomes 500+, owner should first manually update pools from this method before calling updateEmissionRate 
+    function massUpdatePools(uint from, uint to) public {
+        require(poolInfo.length <= to,"Out of range!");
+        if(to.sub(from) <= 500){
+            for (uint256 pid = from; pid <= to; ++pid) {
+                updatePool(pid);
+            }
         }
     }
 
@@ -273,7 +272,7 @@ contract MasterChef is Ownable {
     }
 
     function updateEmissionRate(uint256 _tokenPerBlock, uint _devReward) public onlyOwner {
-        massUpdatePools();
+        massUpdatePools(0,poolInfo.length.sub(1));
         tokenPerBlock = _tokenPerBlock;
         devReward = _devReward;
     }
