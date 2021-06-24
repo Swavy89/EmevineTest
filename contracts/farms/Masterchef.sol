@@ -164,9 +164,9 @@ contract MasterChef is Ownable {
         return block.timestamp >= user.nextHarvestUntil;
     }
 
-    function massUpdatePools() public {
+    function massUpdatePools(int from, int to) public {
         uint256 length = poolInfo.length;
-        for (uint256 pid = 0; pid < length; ++pid) {
+        for (uint256 pid = from; pid =< to; ++pid) {
             updatePool(pid);
         }
     }
