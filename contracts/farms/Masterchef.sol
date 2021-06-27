@@ -108,6 +108,7 @@ contract MasterChef is Ownable {
     }
 
     function add(uint256 _allocPoint, IBEP20 _token, uint16 _depositFeeBP, uint256 _minDeposit, uint256 _harvestInterval) public onlyOwner {
+        require(poolInfo.length <= 1000, "Pool Length Full!");
         require(!exists[address(_token)], "Already Exists!");
         require(_depositFeeBP <= 10000, "add: invalid deposit fee basis points");
         require(_harvestInterval <= MAXIMUM_HARVEST_INTERVAL, "add: invalid harvest interval");
@@ -160,13 +161,10 @@ contract MasterChef is Ownable {
         return block.timestamp >= user.nextHarvestUntil;
     }
 
-    // if pool length becomes 500+, owner should first manually update pools from this method before calling updateEmissionRate 
-    function massUpdatePools(uint from, uint to) public {
-        require(poolInfo.length <= to,"Out of range!");
-        if(to.sub(from) <= 500){
-            for (uint256 pid = from; pid <= to; ++pid) {
-                updatePool(pid);
-            }
+    function massUpdatePools() public {
+        uint256 length = poolInfo.length;
+        for (uint256 pid = 0; pid < length; ++pid) {
+            updatePool(pid);
         }
     }
 
@@ -272,7 +270,7 @@ contract MasterChef is Ownable {
     }
 
     function updateEmissionRate(uint256 _tokenPerBlock, uint _devReward) public onlyOwner {
-        massUpdatePools(0,poolInfo.length.sub(1));
+        massUpdatePools();
         tokenPerBlock = _tokenPerBlock;
         devReward = _devReward;
     }
