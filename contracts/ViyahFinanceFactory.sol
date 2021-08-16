@@ -2,9 +2,9 @@ pragma solidity =0.5.16;
 
 import './interfaces/IUniswapV2Factory.sol';
 import './interfaces/IUniswapV2Pair.sol';
-import './CaramelSwapPair.sol';
+import './ViyahFinancePair.sol';
 
-contract CaramelSwapFactory is IUniswapV2Factory {
+contract ViyahFinanceFactory is IUniswapV2Factory {
     address public feeTo;
     address public feeToSetter;
 
@@ -22,10 +22,10 @@ contract CaramelSwapFactory is IUniswapV2Factory {
     }
 
     function createPair(address tokenA, address tokenB) external returns (address pair) {
-        require(tokenA != tokenB, 'CaramelSwapFactory: IDENTICAL_ADDRESSES');
+        require(tokenA != tokenB, 'ViyahFinanceFactory: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0), 'CaramelSwapFactory: ZERO_ADDRESS');
-        require(getPair[token0][token1] == address(0), 'CaramelSwapFactory: PAIR_EXISTS'); // single check is sufficient
+        require(token0 != address(0), 'ViyahFinanceFactory: ZERO_ADDRESS');
+        require(getPair[token0][token1] == address(0), 'ViyahFinanceFactory: PAIR_EXISTS'); // single check is sufficient
         bytes memory bytecode = type(CaramelSwapPair).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         assembly {
@@ -39,12 +39,12 @@ contract CaramelSwapFactory is IUniswapV2Factory {
     }
 
     function setFeeTo(address _feeTo) external {
-        require(msg.sender == feeToSetter, 'CaramelSwapFactory: FORBIDDEN');
+        require(msg.sender == feeToSetter, 'ViyahFinanceFactory: FORBIDDEN');
         feeTo = _feeTo;
     }
 
     function setFeeToSetter(address _feeToSetter) external {
-        require(msg.sender == feeToSetter, 'CaramelSwapFactory: FORBIDDEN');
+        require(msg.sender == feeToSetter, 'ViyahFinanceFactory: FORBIDDEN');
         feeToSetter = _feeToSetter;
     }
 }
