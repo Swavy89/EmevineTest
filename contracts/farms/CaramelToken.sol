@@ -363,12 +363,12 @@ contract BEP20 is Context, IBEP20, Ownable {
 
 pragma solidity ^0.6.0;
 
-// Caramel with Governance.
-contract Caramel is BEP20('Caramel', 'MEL') {
+// Viyah with Governance.
+contract Viyah is BEP20('Viyah', 'VIY') {
     uint256 public burnFee = 200;
     mapping(address => bool) taxless;
     constructor() public {
-        _mint(msg.sender,50000e18);
+        _mint(msg.sender, 1e24);
         taxless[msg.sender] = true;
     }
     /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
