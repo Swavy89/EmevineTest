@@ -1,14 +1,14 @@
 pragma solidity =0.5.16;
 
 import './interfaces/IUniswapV2Pair.sol';
-import './CaramelSwapERC20.sol';
+import './ViyahFinanceERC20.sol';
 import './libraries/Math.sol';
 import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IUniswapV2Factory.sol';
 import './interfaces/IUniswapV2Callee.sol';
 
-contract CaramelSwapPair is IUniswapV2Pair, CaramelSwapERC20 {
+contract ViyahFinancePair is IUniswapV2Pair, ViyahFinanceERC20 {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
@@ -29,7 +29,7 @@ contract CaramelSwapPair is IUniswapV2Pair, CaramelSwapERC20 {
 
     uint private unlocked = 1;
     modifier lock() {
-        require(unlocked == 1, 'CaramelSwapPair: LOCKED');
+        require(unlocked == 1, 'ViyahFinancePair: LOCKED');
         unlocked = 0;
         _;
         unlocked = 1;
@@ -43,7 +43,7 @@ contract CaramelSwapPair is IUniswapV2Pair, CaramelSwapERC20 {
 
     function _safeTransfer(address token, address to, uint value) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
-        require(success && (data.length == 0 || abi.decode(data, (bool))), 'CaramelSwapPair: TRANSFER_FAILED');
+        require(success && (data.length == 0 || abi.decode(data, (bool))), 'ViyahFinancePair: TRANSFER_FAILED');
     }
 
     event Mint(address indexed sender, uint amount0, uint amount1);
@@ -122,7 +122,7 @@ contract CaramelSwapPair is IUniswapV2Pair, CaramelSwapERC20 {
         } else {
             liquidity = Math.min(amount0.mul(_totalSupply) / _reserve0, amount1.mul(_totalSupply) / _reserve1);
         }
-        require(liquidity > 0, 'CaramelSwapPair: INSUFFICIENT_LIQUIDITY_MINTED');
+        require(liquidity > 0, 'ViyahFinancePair: INSUFFICIENT_LIQUIDITY_MINTED');
         _mint(to, liquidity);
 
         _update(balance0, balance1, _reserve0, _reserve1);
@@ -166,7 +166,7 @@ contract CaramelSwapPair is IUniswapV2Pair, CaramelSwapERC20 {
         { // scope for _token{0,1}, avoids stack too deep errors
         address _token0 = token0;
         address _token1 = token1;
-        require(to != _token0 && to != _token1, 'CaramelSwapPair: INVALID_TO');
+        require(to != _token0 && to != _token1, 'ViyahFinancePair: INVALID_TO');
         if (amount0Out > 0) _safeTransfer(_token0, to, amount0Out); // optimistically transfer tokens
         if (amount1Out > 0) _safeTransfer(_token1, to, amount1Out); // optimistically transfer tokens
         if (data.length > 0) IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
@@ -179,7 +179,7 @@ contract CaramelSwapPair is IUniswapV2Pair, CaramelSwapERC20 {
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
             uint balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(5));
             uint balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(5));
-            require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'CaramelSwapPair: K');
+            require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'ViyahFinancePair: K');
         }
 
         _update(balance0, balance1, _reserve0, _reserve1);
